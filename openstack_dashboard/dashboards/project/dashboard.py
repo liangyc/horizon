@@ -85,4 +85,13 @@ class Project(horizon.Dashboard):
     supports_tenants = True
 
 
+@classmethod
+def register(cls, panel):
+    print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+    if hasattr(panel, 'permissions'):
+       panel.permissions = tuple(
+           [perm for perm in panel.permissions if not perm.startswith(
+               'openstack.services.data_processing')])
+    super(Project, cls).register(panel)
+
 horizon.register(Project)

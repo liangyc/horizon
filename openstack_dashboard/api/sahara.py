@@ -40,10 +40,24 @@ VERSIONS.load_supported_version(1.1, {"client": api_client,
                                       "version": 1.1})
 
 
+def get_sahara_url(request):
+
+    SAHARA_URL = "http://10.64.214.127:8386/v1.1"
+    url = SAHARA_URL.rstrip('/')
+    if url.split('/')[-1] in ['v1.0', 'v1.1']:
+        url = SAHARA_URL + '/' + request.user.tenant_id
+    print ("=================================")
+    print (url)
+    print ("=================================")
+    return url
+
+
+
 @memoized
 def client(request):
     return api_client.Client(VERSIONS.get_active_version()["version"],
-                             sahara_url=base.url_for(request, SAHARA_SERVICE),
+                             #sahara_url=base.url_for(request, SAHARA_SERVICE),
+                             sahara_url=get_sahara_url(request),
                              service_type=SAHARA_SERVICE,
                              project_id=request.user.project_id,
                              input_auth_token=request.user.token.id)
